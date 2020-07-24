@@ -4,8 +4,7 @@ import {
   View, 
   ImageBackground, 
   FlatList, 
-  TouchableOpacity,
-  Platform } from 'react-native'
+  TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import todayImage from '../../../assets/imgs/today.jpg'
 import styles from './styles'
@@ -18,6 +17,7 @@ export default class TaskList extends Component {
 
   state = {
     showDoneTasks: true,
+    visibleTasks: [],
     tasks: [
     {
       id: Math.random(),
@@ -33,20 +33,37 @@ export default class TaskList extends Component {
   ]
   }
 
-  toggleFilter = () => {
-    this.setState({ showDoneTasks: !this.state.showDoneTasks })
+  componentDidMount = () => {
+    this.filterTasks()
   }
+
+  toggleFilter = () => {
+    this.setState({ showDoneTasks: !this.state.showDoneTasks }, this.filterTasks)
+
+  }
+
+  filterTasks = () => {
+    let visibleTasks = null
+    if(this.state.showDoneTasks) {
+        visibleTasks = [...this.state.tasks]
+    } else {
+        const pending = task => task.doneAt === null
+        visibleTasks = this.state.tasks.filter(pending)
+    }
+
+    this.setState({ visibleTasks })
+}
 
   toggleTask = taskId => {
     const tasks = [...this.state.tasks]
     tasks.forEach(task => {
-      if(task.id === taskId) {
-        task.doneAt = task.doneAt ? null : new Date()
-      }
+        if(task.id === taskId) {
+            task.doneAt = task.doneAt ? null : new Date()
+        }
     })
 
-    this.setState({ tasks })
-  }
+    this.setState({ tasks }, this.filterTasks)
+}
 
   render() {
     const today = moment().locale('pt-br').format('ddd, D [de] MMMM [de] YYYY')
@@ -65,7 +82,7 @@ export default class TaskList extends Component {
           </View>
         </ImageBackground>
         <View style={styles.taskList}>
-          <FlatList data={this.state.tasks}
+          <FlatList data={this.state.visibleTasks}
           keyExtractor={item => `${item.id}`}
           renderItem={({item}) => <Task {...item} toggleTask={this.toggleTask} /> } />
         </View>

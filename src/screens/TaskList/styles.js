@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import global from '../../global'
 
 const styles = StyleSheet.create({
@@ -31,7 +31,9 @@ const styles = StyleSheet.create({
     },
     iconBar: {
         flexDirection: 'row',
-        
+        marginHorizontal: 20,
+        justifyContent: 'flex-end',
+        marginTop: Platform.OS === 'ios' ? 40 : 20
     }
 })
 
