@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 20,
         marginBottom: 30
+    },
+    iconBar: {
+        flexDirection: 'row',
+        
     }
 })
 
