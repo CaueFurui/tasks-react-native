@@ -4,7 +4,8 @@ import {
   View, 
   ImageBackground, 
   FlatList, 
-  TouchableOpacity } from 'react-native'
+  TouchableOpacity,
+  Alert } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import todayImage from '../../../assets/imgs/today.jpg'
 import styles from './styles'
@@ -33,6 +34,23 @@ export default class TaskList extends Component {
       estimateAt: new Date(),
     },
   ]
+  }
+
+  addTask = newTask => {
+    if(!newTask.desc || !newTask.desc.trim()) {
+      Alert.alert('Dados inválidos', 'Descrição não informada!')
+      return
+    }
+
+    const tasks = [...this.state.tasks]
+    tasks.push({
+      id: Math.random(),
+      desc: newTask.desc,
+      estimateAt: newTask.date,
+      doneAt: null
+    })
+
+    this.setState({ tasks, showModal: false }, this.filterTasks)
   }
 
   componentDidMount = () => {
@@ -72,7 +90,8 @@ export default class TaskList extends Component {
     return (
       <View style={styles.container}>
         <AddTask isVisible={this.state.showModal}
-          onCancel={() => this.setState({ showModal: false })}/>
+          onCancel={() => this.setState({ showModal: false })}
+          onSave={this.addTask}/>
         <ImageBackground source={todayImage} style={styles.background}>
           <View style={styles.iconBar}>
             <TouchableOpacity onPress={this.toggleFilter}>
