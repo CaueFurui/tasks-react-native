@@ -18,7 +18,7 @@ export default class TaskList extends Component {
 
   state = {
     showDoneTasks: true,
-    showModal: true,
+    showModal: false,
     visibleTasks: [],
     tasks: [
     {
@@ -90,6 +90,12 @@ export default class TaskList extends Component {
           keyExtractor={item => `${item.id}`}
           renderItem={({item}) => <Task {...item} toggleTask={this.toggleTask} /> } />
         </View>
+        <TouchableOpacity style={styles.addButton} 
+          onPress={() => this.setState({ showModal: true})} 
+          activeOpacity={0.7}>
+          <Icon name='plus' size={20} 
+            color={global.colors.secondary} />
+        </TouchableOpacity>
       </View>
     )
   }
