@@ -35,6 +35,11 @@ const styles = StyleSheet.create({
         margin: 20,
         marginRight: 30,
         color: global.colors.today
+    },
+    date: {
+        fontFamily: global.fontFamily,
+        fontSize: 20,
+        marginLeft: 15
     }
 })
 
