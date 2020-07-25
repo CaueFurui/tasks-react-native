@@ -20,18 +20,30 @@ export default props => {
 
     const getRightContent = () => {
         return (
-            <TouchableOpacity style={styles.right}>
-                <Icon name='trash'size={30} color='#fff' />
+            <TouchableOpacity style={styles.right} 
+                onPress={() => props.onDelete && props.onDelete(props.id)}>
+                <Icon name='trash' size={30} color='#fff' />
             </TouchableOpacity>
         )
     }
 
+    const getLeftContent = () => {
+        return (
+            <View style={styles.left}>
+                <Icon name='trash' size={20} color='#fff' style={styles.excludeIcon} />
+                <Text style={styles.excludeText}>Excluir</Text>
+            </View>
+        )
+    }
+
     return (
-        <Swipeable renderRightActions={getRightContent}>
+        <Swipeable renderRightActions={getRightContent} 
+            renderLeftActions={getLeftContent}
+            onSwipeableLeftOpen={() => props.onDelete && props.onDelete(props.id)}>
             <View style={styles.container}>
                 <View style={styles.checkContainer}>
                     <TouchableWithoutFeedback
-                    onPress={() => {props.toggleTask(props.id)}}>
+                    onPress={() => {props.onToggleTask(props.id)}}>
                         { getCheckView(props.doneAt) }
                     </TouchableWithoutFeedback>
                 </View>
@@ -64,7 +76,8 @@ const styles = StyleSheet.create({
         borderColor: global.colors.grey,
         borderBottomWidth: 1,
         alignItems: 'center',
-        paddingVertical: 10
+        paddingVertical: 10,
+        backgroundColor: global.colors.white
     },
     checkContainer: {
         width: '20%',
@@ -101,5 +114,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-end',
         paddingHorizontal: 20
+    },
+    left: {
+        flex: 1,
+        backgroundColor: 'red',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    excludeText: {
+        fontFamily: global.fontFamily,
+        color: global.colors.white,
+        fontSize: 20,
+        margin: 10
+    },
+    excludeIcon: {
+        marginLeft: 10
     }
 })

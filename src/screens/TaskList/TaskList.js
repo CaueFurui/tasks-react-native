@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Alert } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-community/async-storage'
 import todayImage from '../../../assets/imgs/today.jpg'
 import styles from './styles'
 import moment from 'moment'
@@ -15,25 +16,17 @@ import Task from '../../components/Task'
 import global from '../../global'
 import AddTask from '../AddTask'
 
+const initialState = {
+  showDoneTasks: true,
+  showModal: false,
+  visibleTasks: [],
+  tasks: []
+}
+
 export default class TaskList extends Component {
 
   state = {
-    showDoneTasks: true,
-    showModal: false,
-    visibleTasks: [],
-    tasks: [
-    {
-      id: Math.random(),
-      desc: 'Comprar Maçã',
-      estimateAt: new Date(),
-      doneAt: new Date()
-    }, 
-    {
-      id: Math.random(),
-      desc: 'Comprar Banana',
-      estimateAt: new Date(),
-    },
-  ]
+    ...initialState
   }
 
   addTask = newTask => {
@@ -53,8 +46,11 @@ export default class TaskList extends Component {
     this.setState({ tasks, showModal: false }, this.filterTasks)
   }
 
-  componentDidMount = () => {
-    this.filterTasks()
+  componentDidMount = async () => {
+    const stateString = await AsyncStorage.getItem('tasksState')
+    const state = JSON.parse(stateString) || initialState
+    this.setState(state, this.filterTasks)
+
   }
 
   toggleFilter = () => {
@@ -72,6 +68,8 @@ export default class TaskList extends Component {
     }
 
     this.setState({ visibleTasks })
+
+    AsyncStorage.setItem('tasksState', JSON.stringify(this.state))
 }
 
   toggleTask = taskId => {
@@ -84,6 +82,11 @@ export default class TaskList extends Component {
 
     this.setState({ tasks }, this.filterTasks)
 }
+
+  deleteTask = id => {
+    const tasks = this.state.tasks.filter(task => task.id !== id)
+    this.setState({ tasks }, this.filterTasks)
+  }
 
   render() {
     const today = moment().locale('pt-br').format('ddd, D [de] MMMM [de] YYYY')
@@ -107,7 +110,7 @@ export default class TaskList extends Component {
         <View style={styles.taskList}>
           <FlatList data={this.state.visibleTasks}
           keyExtractor={item => `${item.id}`}
-          renderItem={({item}) => <Task {...item} toggleTask={this.toggleTask} /> } />
+          renderItem={({item}) => <Task {...item} onToggleTask={this.toggleTask} onDelete={this.deleteTask}/> } />
         </View>
         <TouchableOpacity style={styles.addButton} 
           onPress={() => this.setState({ showModal: true})} 
