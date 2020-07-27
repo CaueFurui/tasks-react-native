@@ -14,6 +14,13 @@ const styles = StyleSheet.create({
         fontSize: 70,
         marginBottom: 10
     },
+    subtitle: {
+        fontFamily: global.fontFamily,
+        color: global.colors.white,
+        fontSize: 20,
+        textAlign: 'center',
+        marginBottom: 10
+    },
     input: {
         marginTop: 10,
         backgroundColor: global.colors.white,
