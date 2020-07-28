@@ -6,7 +6,7 @@ import axios from 'axios'
 
 export default class AuthOrApp extends Component {
 
-    async componentDidMount() {
+    componentDidMount = async () => {
         const userDataJson = await AsyncStorage.getItem('userData')
         let userData = null
 

@@ -35,6 +35,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: global.colors.subText,
         marginBottom: 10
+    },
+    logoutIcon: {
+        marginLeft: 10,
+        marginBottom: 10
     }
 })
 
