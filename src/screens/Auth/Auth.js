@@ -13,8 +13,8 @@ import axios from 'axios'
 
 initialState = {
     name: '',
-    email: '',
-    password: '',
+    email: 'teste4@teste.com.br',
+    password: '123456',
     confirmPassword: '',
     stageNew: false
 }
