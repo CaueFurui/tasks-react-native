@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Text, View, ActivityIndicator } from 'react-native'
+import { View, ActivityIndicator } from 'react-native'
 import styles from './styles'
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
+import { CommonActions } from '@react-navigation/native'
 
 export default class AuthOrApp extends Component {
 
@@ -18,9 +19,28 @@ export default class AuthOrApp extends Component {
 
         if(userData && userData.token) {
             axios.defaults.headers.common['Authorization'] = `bearer ${userData.token}`
-            this.props.navigation.navigate('Home', userData)
+            this.props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        {
+                            name: 'Home',
+                            params: userData
+                        }
+                    ]
+                })
+            )
         } else {
-            this.props.navigation.navigate('Auth')
+            this.props.navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        {
+                            name: 'Auth',
+                        }
+                    ]
+                })
+            )
         }
     }
 
