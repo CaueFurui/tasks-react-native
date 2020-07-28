@@ -8,6 +8,7 @@ import {
     Alert } from 'react-native'
 import styles from './styles'
 import backgroundImage from '../../../assets/imgs/login.jpg'
+import AuthInput from '../../components/AuthInput'
 
 export default class Auth extends Component {
 
@@ -16,7 +17,7 @@ export default class Auth extends Component {
         email: '',
         password: '',
         confirmPassword: '',
-        stageNew: true
+        stageNew: false
     }
 
     signInOrSignUp = () => {
@@ -36,19 +37,22 @@ export default class Auth extends Component {
                         {this.state.stageNew ? 'Crie sua conta' : 'Informe seus dados'}
                     </Text>
                     {this.state.stageNew && 
-                        <TextInput placeholder='Nome' value={this.state.name} 
+                        <AuthInput icon='user' placeholder='Nome' 
+                        value={this.state.name} 
                         style={styles.input} 
                         onChangeText={name => this.setState({ name })}/>
                     }
-                    <TextInput placeholder='E-mail' value={this.state.email} 
+                    <AuthInput icon='at' placeholder='E-mail' 
+                        value={this.state.email} 
                         style={styles.input} 
                         onChangeText={email => this.setState({ email })}/>
-                    <TextInput placeholder='Senha' value={this.state.password} 
+                    <AuthInput icon='lock' placeholder='Senha' 
+                        value={this.state.password} 
                         style={styles.input} 
                         secureTextEntry={true}
                         onChangeText={password => this.setState({ password })}/>
                     {this.state.stageNew && 
-                        <TextInput placeholder='Confirme a sua senha' 
+                        <AuthInput icon='asterisk' placeholder='Confirme a sua senha' 
                         value={this.state.confirmPassword} 
                         secureTextEntry={true}
                         style={styles.input} 

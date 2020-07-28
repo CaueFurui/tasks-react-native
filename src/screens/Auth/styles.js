@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet } from 'react-native'
 import global from '../../global'
 
 const styles = StyleSheet.create({
@@ -23,8 +23,7 @@ const styles = StyleSheet.create({
     },
     input: {
         marginTop: 10,
-        backgroundColor: global.colors.white,
-        padding: Platform.OS == 'ios' ? 15 : 10
+        backgroundColor: global.colors.white
     },
     formContainer: {
         backgroundColor: 'rgba(0, 0, 0, 0.6)',
@@ -35,7 +34,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#080',
         marginTop: 10,
         padding: 10,
-        alignItems: 'center'
+        alignItems: 'center',
+        borderRadius: 7
     },
     buttonText: {
         fontFamily: global.fontFamily,
