@@ -9,8 +9,11 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-community/async-storage'
 import todayImage from '../../../assets/imgs/today.jpg'
+import tomorrowImage from '../../../assets/imgs/tomorrow.jpg'
+import weekImage from '../../../assets/imgs/week.jpg'
+import monthImage from '../../../assets/imgs/month.jpg'
 import styles from './styles'
-import moment, { max } from 'moment'
+import moment from 'moment'
 import 'moment/locale/pt-br'
 import Task from '../../components/Task'
 import global from '../../global'
@@ -62,7 +65,9 @@ export default class TaskList extends Component {
 
   loadTasks = async () => {
     try {
-      const maxDate = moment().format('YYYY-MM-DD 23:59:59')
+      const maxDate = moment()
+        .add({days: this.props.daysAhead})
+        .format('YYYY-MM-DD 23:59:59')
       const res = await axios.get(`${server}/tasks?date=${maxDate}`)
       this.setState({ tasks: res.data }, this.filterTasks)
     } catch (e) {
@@ -109,6 +114,24 @@ export default class TaskList extends Component {
     }
   }
 
+  getImage = () => {
+    switch(this.props.daysAhead) {
+      case 0: return todayImage
+      case 1: return tomorrowImage
+      case 7: return weekImage
+      case 30: return monthImage
+    }
+  }
+
+  getColor = () => {
+    switch(this.props.daysAhead) {
+      case 0: return global.colors.today
+      case 1: return global.colors.tomorrow
+      case 7: return global.colors.week
+      case 30: return global.colors.month
+    }
+  }
+
   render() {
     const today = moment().locale('pt-br').format('ddd, D [de] MMMM [de] YYYY')
     return (
@@ -116,15 +139,18 @@ export default class TaskList extends Component {
         <AddTask isVisible={this.state.showModal}
           onCancel={() => this.setState({ showModal: false })}
           onSave={this.addTask}/>
-        <ImageBackground source={todayImage} style={styles.background}>
+        <ImageBackground source={this.getImage()} style={styles.background}>
           <View style={styles.iconBar}>
+            <TouchableOpacity onPress={() => this.props.navigation.openDrawer()}>
+              <Icon name='bars' size={20} color={global.colors.secondary}/>
+            </TouchableOpacity>
             <TouchableOpacity onPress={this.toggleFilter}>
               <Icon name={ this.state.showDoneTasks ? 'eye' : 'eye-slash' } 
               size={20} color={global.colors.secondary}/>
             </TouchableOpacity>
           </View>
           <View style={styles.titleBar}>
-            <Text style={styles.title}>Hoje</Text>
+            <Text style={styles.title}>{this.props.title}</Text>
             <Text style={styles.subtitle}>{today}</Text>
           </View>
         </ImageBackground>
@@ -133,7 +159,7 @@ export default class TaskList extends Component {
           keyExtractor={item => `${item.id}`}
           renderItem={({item}) => <Task {...item} onToggleTask={this.toggleTask} onDelete={this.deleteTask}/> } />
         </View>
-        <TouchableOpacity style={styles.addButton} 
+        <TouchableOpacity style={[styles.addButton, { backgroundColor: this.getColor() }]} 
           onPress={() => this.setState({ showModal: true})} 
           activeOpacity={0.7}>
           <Icon name='plus' size={20} 
